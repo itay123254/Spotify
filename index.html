@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מוזיקה רחוב</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+        }
+
+        header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #lyrics-content {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #player {
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ברוכים הבאים למוזיקה רחוב</h1>
+    </header>
+    <main>
+        <section id="player">
+            <h2>נגן מוזיקה</h2>
+            <audio controls id="audio-player" preload="auto">
+                <source src="WhatsApp-Audio-2024-12-06-at-14.17.17.mp3" type="audio/mpeg">
+                הדפדפן שלך לא תומך בנגן השמע.
+            </audio>
+        </section>
+        <section id="lyrics">
+            <h2>מילות השיר</h2>
+            <div id="lyrics-content"></div>
+        </section>
+    </main>
+
+    <script>
+        // מילות השיר עם זמני השיר המדויקים (הוספתי את השורות שלך)
+        const lyrics = [
+            { time: 0, text: "בית 1:" },
+            { time: 3, text: "עולה לבמה, הקצב בידיים," },
+            { time: 7, text: "מילים כמו כדורים, מפילות חומות לשמיים." },
+            { time: 11, text: "ברחובות גדלתי, למדתי לנשום," },
+            { time: 15, text: "לא נכנע לשגרה, רק בונה חלום." },
+            { time: 20, text: "החיים זה קרב, והזמן הוא קצר," },
+            { time: 25, text: "אבל אני פה לוחם, תמיד שובר את המחסום." },
+            { time: 30, text: "עם פלואו כזה חלק, אין מקום לעצור," },
+            { time: 35, text: "כי ההיפ הופ שלי בוער כמו אור!" },
+            { time: 45, text: "פזמון:" },
+            { time: 50, text: "ביט כבד, רחוב בוער," },
+            { time: 55, text: "זורם כמו נהר, אין מקום לאחר." },
+            { time: 60, text: "החיים זה משחק, אני לוקח סיכון," },
+            { time: 65, text: "בין הצללים אני מנצח בזכות האמון." },
+            { time: 75, text: "בית 2:" },
+            { time: 80, text: "ברחוב לומדים מהר, מי החבר האמיתי," },
+            { time: 85, text: "מי בא איתך עד הסוף, ומי רק מחפש ת’קליק." },
+            { time: 90, text: "כל יום זה אתגר, כל לילה מסיבה," },
+            { time: 95, text: "עם המיקרופון שלי, אני משנה ת’תמונה." },
+            { time: 100, text: "אמת בקול, חוקים אני שובר," },
+            { time: 105, text: "מילים שלי חותכות כמו סכין של קצב אחר." },
+            { time: 110, text: "הראפ הוא הנשק, והמילים הן הכוח," },
+            { time: 115, text: "אני בא מהלב, נותן לעולם לצרוח." },
+            { time: 125, text: "פזמון:" },
+            { time: 130, text: "ביט כבד, רחוב בוער," },
+            { time: 135, text: "זורם כמו נהר, אין מקום לאחר." },
+            { time: 140, text: "החיים זה משחק, אני לוקח סיכון," },
+            { time: 145, text: "בין הצללים אני מנצח בזכות האמון." },
+            { time: 155, text: "ברידג’:" },
+            { time: 160, text: "זה לא רק עליי, זה על כולם," },
+            { time: 165, text: "חיים שלמים שנכתבים על הקירות בעולם." },
+            { time: 170, text: "אם יש לך קול, תרים אותו גבוה," },
+            { time: 175, text: "כי כשאתה אמיתי, הכל מתחבר בשמחה." },
+            { time: 185, text: "פזמון (x2):" },
+            { time: 190, text: "ביט כבד, רחוב בוער," },
+            { time: 195, text: "זורם כמו נהר, אין מקום לאחר." },
+            { time: 200, text: "החיים זה משחק, אני לוקח סיכון," },
+            { time: 205, text: "בין הצללים אני מנצח בזכות האמון." },
+            { time: 215, text: "סיום:" },
+            { time: 220, text: "הקצב הזה לא נגמר," },
+            { time: 225, text: "זה הרחוב, זה הסיפור שנשאר." }
+        ];
+
+        // הצגת המילים מיידית
+        function showLyrics() {
+            const lyricsContent = document.getElementById('lyrics-content');
+            lyricsContent.innerHTML = '';  // מנקה קודם את המילים המוצגות
+
+            lyrics.forEach(lyric => {
+                const lyricElement = document.createElement('div');
+                lyricElement.textContent = lyric.text;
+                lyricsContent.appendChild(lyricElement);
+            });
+        }
+
+        // פונקציה לעדכון המילים בזמן שהשיר מתנגן
+        function updateLyrics() {
+            const audio = document.getElementById('audio-player');
+            const lyricsContent = document.getElementById('lyrics-content');
+            let currentTime = audio.currentTime;
+
+            // חיפוש אחר המילים שמתאימות לזמן הנוכחי
+            const currentLyric = lyrics.filter(lyric => lyric.time <= currentTime); 
+            const lastLyric = currentLyric[currentLyric.length - 1];
+
+            if (lastLyric) {
+                // עדכון התוכן של המילים
+                lyricsContent.innerHTML = '';
+                lyrics.forEach(lyric => {
+                    const lyricElement = document.createElement('div');
+                    lyricElement.textContent = lyric.text;
+                    lyricsContent.appendChild(lyricElement);
+                });
+            }
+        }
+
+        // מתי שהשיר מתחיל, מיידית מציג את המילים
+        document.getElementById('audio-player').addEventListener('play', function() {
+            showLyrics();  // הצגת המילים מתחילה ברגע שהשיר מתחיל
+            setInterval(updateLyrics, 100); // עדכון כל 100 מילישניות
+        });
+    </script>
+</body>
+</html>
